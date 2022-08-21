@@ -29,7 +29,9 @@ services:
 
   producer:
     container_name: producer
-    build: ./producer
+    build:
+      context: .
+      dockerfile: ./producer/Dockerfile
     ports:
       - 7001:8080
     volumes:
@@ -43,7 +45,9 @@ services:
 
   consumer:
     container_name: consumer
-    build: ./consumer
+    build:
+      context: .
+      dockerfile: ./consumer/Dockerfile
     ports:
       - 7002:8080
     volumes:

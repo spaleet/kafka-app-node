@@ -18,7 +18,7 @@ app.post('/send', (req, res) => {
         const msg = JSON.stringify({ message: req.body.message })
 
         producer.send(
-            [{ topic: "my_topic_1", messages: msg }],
+            [{ topic: process.env.KAFKA_TOPIC, messages: msg }],
             (err, data) => {
                 if (err) {
                     console.log(err);
