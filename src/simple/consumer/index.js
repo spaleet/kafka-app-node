@@ -17,6 +17,7 @@ setTimeout(() => {
 
     consumer.on('message', (message) => {
 
+        console.log("Messege received ", message);
         console.log(`Messege received with ${message.key} key`);
 
         const messageValue = JSON.parse(message.value);

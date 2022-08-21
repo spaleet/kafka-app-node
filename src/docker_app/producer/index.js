@@ -1,30 +1,40 @@
-const kafka = require('kafka-node');
+require('dotenv').config();
+const express = require('express');
+const { getProducer } = require('./producer');
 
-console.log("Starting App ...");
+const app = express();
+app.use(express.json());
 
-setTimeout(() => {
+app.post('/send', (req, res) => {
 
-    const client = new kafka.KafkaClient({
-        kafkaHost: "localhost:9092"
-    });
-    
-    console.log("Starting Consumer ...");
+    if (!req.body || !req.body.message)
+        return res.status(400).send("Please enter the message !");
 
-    const consumer = new kafka.Consumer(client, [{ topic: "my_topic_1" }], {
-        autoCommit: false,
-        groupId: "user"
-    });
+    const producer = getProducer();
 
-    consumer.on('message', (message) => {
+    producer.on('ready', () => {
+        console.log("Producer Ready ...");
 
-        console.log(`Messege received with ${message.key} key`);
+        const msg = JSON.stringify({ message: req.body.message })
 
-        const messageValue = JSON.parse(message.value);
-        console.log("Message Value : ", messageValue);
+        producer.send(
+            [{ topic: "my_topic_1", messages: msg }],
+            (err, data) => {
+                if (err) {
+                    console.log(err);
+                    return res.status(500).send(`Error : ${err}`);
+                } else {
+                    console.log("Message sent!");
+                    return res.status(200).send("Message sent!");
+                }
+            }
+        )
     })
 
-    consumer.on('error', (err) => {
-        console.log("ERROR : ", err);
-    })
-}, 10000)
+});
 
+const PORT = process.env.PORT || 8000;
+
+app.listen(PORT, () => {
+    console.log(`App in running on http://localhost:${PORT}`)
+})
