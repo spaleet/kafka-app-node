@@ -11,12 +11,12 @@ app.get("/health", (req, res) => {
 console.log("Starting App ...");
 
 const client = new kafka.KafkaClient({
-    kafkaHost: "localhost:9092"
+    kafkaHost: process.env.KAFKA_BOOTSTRAP_SERVERS
 });
 
 console.log("Starting Consumer ...");
 
-const consumer = new kafka.Consumer(client, [{ topic: "my_topic_1" }], {
+const consumer = new kafka.Consumer(client, [{ topic: process.env.KAFKA_TOPIC }], {
     autoCommit: false,
     groupId: "user"
 });
