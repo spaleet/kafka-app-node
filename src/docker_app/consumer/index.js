@@ -14,25 +14,37 @@ const client = new kafka.KafkaClient({
     kafkaHost: process.env.KAFKA_BOOTSTRAP_SERVERS
 });
 
-console.log("Starting Consumer ...");
+// check if topic exists
+client.loadMetadataForTopics([process.env.KAFKA_TOPIC], (err, resp) => {
 
-const consumer = new kafka.Consumer(client, [{ topic: process.env.KAFKA_TOPIC }], {
-    autoCommit: false,
-    groupId: "user"
+    if (err) {
+        console.log("ERROR : ", err);
+    }
+    else {
+
+        console.log("Starting Consumer ...");
+
+        const consumer = new kafka.Consumer(client, [{ topic: process.env.KAFKA_TOPIC }], {
+            autoCommit: false,
+            groupId: "user"
+        });
+
+        consumer.on('message', (message) => {
+
+            console.log("Message received ", message);
+            console.log(`Message received with ${message.key} key`);
+
+            const messageValue = JSON.parse(message.value);
+            console.log("Message Value : ", messageValue);
+        });
+
+        consumer.on('error', (err) => {
+            console.log("ERROR : ", err);
+        });
+
+    }
+
 });
-
-consumer.on('message', (message) => {
-
-    console.log("Messege received ", message);
-    console.log(`Messege received with ${message.key} key`);
-
-    const messageValue = JSON.parse(message.value);
-    console.log("Message Value : ", messageValue);
-})
-
-consumer.on('error', (err) => {
-    console.log("ERROR : ", err);
-})
 
 const PORT = process.env.PORT || 8000;
 
