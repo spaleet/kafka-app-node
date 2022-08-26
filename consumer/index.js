@@ -19,13 +19,7 @@ const run = async () => {
 
     await consumer.run({
         eachMessage: async ({ topic, partition, message }) => {
-            console.log({
-                partition,
-                offset: message.offset,
-                value: message.value.toString(),
-            })
-
-            console.log("Message Value : ", message.value.toString());
+            console.log("message received : ", message.value.toString());
         },
     })
 }
