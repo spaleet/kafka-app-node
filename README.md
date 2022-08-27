@@ -5,8 +5,8 @@ Simple Messaging application built with nodejs and kafka
 
 Clone the project source:
 ```bash
-git clone https://github.com/spaleet/kafka-app-node
-cd kafka-app-node/
+git clone https://github.com/spaleet/node-messaging-kafka
+cd node-messaging-kafka/
 ```
 
 Start the containers:
