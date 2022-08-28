@@ -1,4 +1,4 @@
-# Kafka App Node
+# Node Messaging with Kafka
 Simple Messaging application built with nodejs and kafka
 
 ## Installation
